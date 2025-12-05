@@ -2,6 +2,8 @@ from langchain_nvidia_ai_endpoints import ChatNVIDIA
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 from binary_score_models import GradeAnswer,GradeDocuments,GradeHallucinations
+#import openAI chat model for testing purpose
+from langchain_openai import ChatOpenAI
 import os
 from dotenv import load_dotenv
 load_dotenv()
@@ -9,8 +11,12 @@ import json
 
 class Nodeoutputs:
     def __init__(self, api_key, model, prompts_file):
-        os.environ["NVIDIA_API_KEY"] = api_key
-        self.llm = ChatNVIDIA( api_key=api_key, model=model)
+        # os.environ["NVIDIA_API_KEY"] = api_key
+        #change to use openAI for testing purpose
+        os.environ["OPENAI_API_KEY"] = api_key
+        # self.llm = ChatNVIDIA( api_key=api_key, model=model)
+        # change llm to openAI for testing purpose
+        self.llm = ChatOpenAI(model=model, openai_api_key=api_key)
         self.prompts = self.load_prompts(prompts_file)
         self.setup_prompts()
 
@@ -67,6 +73,7 @@ class Nodeoutputs:
 
 # Access the API key from environment variables
 api_key = os.getenv('API_KEY')
-model = "nvidia/llama-3.3-nemotron-super-49b-v1.5"
+# model = "nvidia/llama-3.3-nemotron-super-49b-v1.5"
+model = "gpt-4o-mini"
 prompts_file = "prompt.json"
 automation = Nodeoutputs(api_key, model, prompts_file)

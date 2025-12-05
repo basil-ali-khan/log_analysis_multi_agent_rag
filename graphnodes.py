@@ -5,6 +5,7 @@ import io
 from contextlib import redirect_stdout, redirect_stderr
 from utils import automation
 from dotenv import load_dotenv
+# from langchain_openai import OpenAIRerank
 load_dotenv()
 api_key = os.getenv('API_KEY')
 
@@ -21,13 +22,23 @@ class Nodes:
 
         return {"documents": documents, "question": question}
 
-    @staticmethod
-    def rerank(state):
-        print("NVIDIA--RERANKER")
-        question = state["question"]
-        documents = state["documents"]
-        reranker =  NVIDIARerank(model="nvidia/llama-3.2-nv-rerankqa-1b-v2", api_key=api_key)
-        documents = reranker.compress_documents(query=question, documents=documents)
+    # @staticmethod
+    # def rerank(state):
+    #     # print("NVIDIA--RERANKER")
+    #     print("OPENAI--RERANKER")
+    #     question = state["question"]
+    #     documents = state["documents"]
+    #     # reranker =  NVIDIARerank(model="nvidia/llama-3.2-nv-rerankqa-1b-v2", api_key=api_key)
+    #     reranker = OpenAIRerank(model="text-embedding-3-small", openai_api_key=api_key)
+    #     documents = reranker.compress_documents(query=question, documents=documents)
+    #     return {"documents": documents, "question": question}
+
+    @staticmethod  
+    def rerank(state):  
+        print("SKIPPING RERANK (OpenAI doesn't have reranker)")  
+        question = state["question"]  
+        documents = state["documents"]  
+        # Skip reranking or implement alternative scoring  
         return {"documents": documents, "question": question}
 
     @staticmethod

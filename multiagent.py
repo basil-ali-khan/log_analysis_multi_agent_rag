@@ -5,20 +5,24 @@ from langchain_community.document_loaders import TextLoader
 from langchain.retrievers import EnsembleRetriever
 from langchain_community.retrievers import BM25Retriever
 from langchain_community.vectorstores.faiss import FAISS
+from langchain_openai import OpenAIEmbeddings
 from dotenv import load_dotenv
 load_dotenv()
 api_key = os.getenv('API_KEY')
 class HybridRetriever:
     def __init__(self, file_path, api_key):
         self.file_path = file_path
-        os.environ["NVIDIA_API_KEY"] = api_key
-        self.embeddings = self.initialize_nvidia_components()
+        # os.environ["NVIDIA_API_KEY"] = api_key
+        os.environ["OPENAI_API_KEY"] = api_key
+        self.embeddings = self.initialize_openai_components()
+        
         self.doc_splits = self.load_and_split_documents()
         self.bm25_retriever, self.faiss_retriever = self.create_retrievers()
         self.hybrid_retriever = self.create_hybrid_retriever()
 
-    def initialize_nvidia_components(self):
-        embeddings =NVIDIAEmbeddings(model="nvidia/llama-3.2-nv-embedqa-1b-v2", truncate="END")
+    def initialize_openai_components(self):
+        # embeddings =NVIDIAEmbeddings(model="nvidia/llama-3.2-nv-embedqa-1b-v2", truncate="END")
+        embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
         return  embeddings
 
     def load_and_split_documents(self):
